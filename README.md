@@ -17,7 +17,7 @@ Area: API | SDK | docs | app | contracts
 ## Environment
 ```
 
-## Reports — 11 files (5 major, 6 normal), ordered by expected acceptance value
+## Reports — 12 files (5 major, 7 normal), ordered by expected acceptance value
 
 | # | Area | Severity | Title |
 |---|---|---|---|
@@ -32,6 +32,7 @@ Area: API | SDK | docs | app | contracts
 | 09 | docs | normal | `depth` is capped at 1000, but the maximum is not documented |
 | 10 | docs | normal | The 100-request rate limit is visible only in response headers |
 | 11 | docs | normal | Stop-order hold is "0.15 STT" in the app docs and "0.15 SOMI" in the bot kit |
+| 12 | docs | normal | Indexer mark prices are 8–33 minutes stale, while the docs describe the figures as "live" |
 
 ## Environment used
 
