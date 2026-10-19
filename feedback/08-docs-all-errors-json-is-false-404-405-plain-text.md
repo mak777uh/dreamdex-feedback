@@ -9,6 +9,7 @@ Area: docs
 curl -sS -i 'https://stg.api.dreamdex.io/v0/nope'
 curl -sS -i -X POST -H 'Content-Type: application/json' --data '{}' 'https://stg.api.dreamdex.io/v0/markets'
 curl -sS -i -X POST 'https://stg.api.dreamdex.io/v0/markets'   # no body at all
+curl -sS -i -X OPTIONS 'https://stg.api.dreamdex.io/v0/markets'   # no Origin header
 ```
 
 ## Expected
@@ -23,6 +24,9 @@ The Error Handling page states that all error responses share one JSON format (w
 - Wrong method (with a JSON body) → **405** with `content-type: text/plain; charset=utf-8`,
   `allow: GET, HEAD`, **no JSON body and no `Error-Name`**.
 - Wrong method without a body → **411 Length Required** returning an **HTML** page.
+- OPTIONS without an Origin header → **405** with content-type: text/plain; charset=utf-8,
+  again without JSON or Error-Name. (A genuine CORS preflight, with Origin, correctly returns 204
+  and the ccess-control-* headers.)
 
 Known routes do return the documented JSON (e.g. `GET /v0/markets/NOPE:USDso` → `market_not_found`), so
 the inconsistency is limited to routing-level errors — exactly the class a client's global error handler
@@ -44,6 +48,11 @@ content-type: text/plain; charset=utf-8
 ```
 HTTP/1.0 411 Length Required
 Content-Type: text/html; charset=UTF-8
+`
+`
+HTTP/1.1 405 Method Not Allowed
+allow: GET, HEAD
+content-type: text/plain; charset=utf-8
 ```
 
 ## Environment
