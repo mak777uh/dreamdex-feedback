@@ -17,9 +17,9 @@ Area: API | SDK | docs | app | contracts
 ## Environment
 ```
 
-## Reports — 16 files (7 major, 9 normal), ordered by expected acceptance value
+## Reports — 18 files (8 major, 10 normal), ordered by expected acceptance value
 
-### Major — API/SDK behaviour first (integration breakers)
+### Major (01–08) — SDK/API behaviour first
 
 | # | Area | Title |
 |---|---|---|
@@ -28,22 +28,24 @@ Area: API | SDK | docs | app | contracts
 | 03 | API | WebSocket REST-bridge: `getOrderbooks` always fails with `invalid_request` |
 | 04 | API | `HEAD` returns 400 on every GET endpoint, although the server advertises `Allow: GET, HEAD` |
 | 05 | API | `limit` is validated on `/trades` and `/candles` but silently ignored on `/tickers` and `/orderbooks` |
-| 06 | docs | Unknown symbols are not "silently skipped" — the API returns 400 `invalid_param` |
-| 07 | docs | The perps testnet the bounty runs on (Hideki / "Tokyo") is missing from the documented environments |
+| 06 | SDK | `buildPlacePerpOrder` returns a signable transaction with `to: undefined` and accepts invalid enums and sizes |
+| 07 | docs | Unknown symbols are not "silently skipped" — the API returns 400 `invalid_param` |
+| 08 | docs | The perps testnet the bounty runs on (Hideki / "Tokyo") is missing from the documented environments |
 
-### Normal — docs and edge semantics
+### Normal (09–18) — docs and edge semantics
 
 | # | Area | Title |
 |---|---|---|
-| 08 | docs | "All error responses use a consistent JSON format" is false for 404, 405, OPTIONS and 411 |
-| 09 | API | WS `subscription_failed` does not say which symbol was rejected |
-| 10 | API | Indexer: `perpStatus` / `perpRestricted` null for every registered perp market |
-| 11 | docs | Indexer mark prices are 8–33 minutes stale, while the docs describe the figures as "live" |
-| 12 | docs | `depth` is capped at 1000, but the maximum is not documented |
-| 13 | docs | The 100-request rate limit is visible only in response headers |
-| 14 | API | A duplicated symbol in repeated-key `symbols` returns 400 `duplicate items found` (schema dump) |
-| 15 | API | Protected endpoints answer 401 without a `WWW-Authenticate` header |
-| 16 | docs | Stop-order hold is "0.15 STT" in the app docs and "0.15 SOMI" in the bot kit |
+| 09 | docs | "All error responses use a consistent JSON format" is false for 404, 405, OPTIONS and 411 |
+| 10 | API | WS `subscription_failed` does not say which symbol was rejected |
+| 11 | API | Indexer: `perpStatus` / `perpRestricted` null for every registered perp market |
+| 12 | docs | Indexer mark prices are 8–33 minutes stale, while the docs describe the figures as "live" |
+| 13 | docs | `depth` is capped at 1000, but the maximum is not documented |
+| 14 | docs | The 100-request rate limit is visible only in response headers |
+| 15 | API | A duplicated symbol in repeated-key `symbols` returns 400 `duplicate items found` (schema dump) |
+| 16 | API | Protected endpoints answer 401 without a `WWW-Authenticate` header |
+| 17 | docs | Stop-order hold is "0.15 STT" in the app docs and "0.15 SOMI" in the bot kit |
+| 18 | SDK | Reduce-only is documented for perp orders, but a plain limit/market reduce-only order is not expressible through the SDK |
 
 ## Environment used
 
@@ -52,15 +54,16 @@ Area: API | SDK | docs | app | contracts
 - Perps testnet: **Hideki, chain 50383** (`eth_chainId` → `0xc4cf`)
 - WebSocket: `wss://stg.api.dreamdex.io/v0/ws/public`
 - Indexer: `https://hideki-dev.smk.somnia.host/v1/graphql`
-- SDK: `@somnia-chain/markets-sdk` **0.32.1** (`somnia-chain/dreamdex-bot-kit`, `packages/core/src/rest.ts`)
+- SDK: `@somnia-chain/markets-sdk` **0.32.1** (`somnia-chain/dreamdex-bot-kit`), Node **24.14.1**
 - Public endpoints only — no wallet, no API key, no transactions
 
 ## Notes
 
-- Every `## Steps to reproduce` block contains the exact command, and `## Evidence` quotes the responses
-  captured at the time of writing (2026-10-19 22:50 – 2026-10-20 02:00 MSK).
-- Items 01–15 were executed against the live endpoints; item 16 compares two published texts.
+- Every `## Steps to reproduce` block contains the exact command or script; `## Evidence` quotes the
+  responses/output captured at the time of writing (2026-10-19 22:50 – 2026-10-20 02:15 MSK).
+- Items 01–17 were executed against the live endpoints or against the published SDK sources; item 18 is
+  a type/ABI inspection confirmed by building a call with SDK 0.32.1 (no wallet, nothing sent).
 - **Security issues are deliberately not in this repository** — per the bounty rules they go to
   `security@dreamdex.io`. No exploitable vulnerability was identified while preparing these reports.
-- Duplicate candidates were merged, not filed twice: the 404/405 item also carries the `OPTIONS`
-  behaviour, and the comma-symbols item is filed once (SDK bug) rather than separately as an API bug.
+- Duplicates were merged, not filed twice: the 404/405 item also carries the `OPTIONS` behaviour, and the
+  comma-symbols bug is filed once (SDK) rather than again as an API bug.
