@@ -3,6 +3,8 @@
 Severity: major
 Area: SDK
 
+Status: reproduces on **stg** and **mainnet** as of 2026-10-20 (comma-joined `symbols` → 400). On `api.testnet.dreamdex.io` the same request is accepted (200), so this is host-specific: the bug is in the bot kit's serialization, and only the documented hosts reject it.
+
 ## Steps to reproduce
 
 1. Call the documented REST method with more than one symbol. The SDK builds the query like this

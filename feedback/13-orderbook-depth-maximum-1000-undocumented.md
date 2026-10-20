@@ -1,4 +1,4 @@
-# `depth` is capped at 1000, but the maximum is not documented
+# `depth` above 1000 is rejected, but the maximum is not documented
 
 Severity: normal
 Area: docs
@@ -11,6 +11,8 @@ curl -sS 'https://stg.api.dreamdex.io/v0/orderbooks?symbols=SOMI:USDso&depth=100
 ```
 
 ## Expected
+
+The maximum is either enforced with a documented limit or stated next to the parameter.
 
 The Market Data page documents `depth` without stating a maximum (and without stating a default), so a
 client cannot know the valid range without triggering an error.

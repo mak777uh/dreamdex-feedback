@@ -3,6 +3,8 @@
 Severity: normal
 Area: docs
 
+Status: reproduces on **stg** and **mainnet** as of 2026-10-20 (404 and a trailing slash return `text/plain`, a bodyless POST returns 411 HTML). On `api.testnet.dreamdex.io` both are JSON 404 and POST answers 404 rather than 405, so the phrase "all errors are JSON" is still false there for other reasons.
+
 ## Steps to reproduce
 
 ```bash

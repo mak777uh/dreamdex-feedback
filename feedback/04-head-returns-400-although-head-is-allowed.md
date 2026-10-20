@@ -3,6 +3,8 @@
 Severity: major
 Area: API
 
+Status: reproduces on **stg** and **mainnet** as of 2026-10-20 (HEAD → 400, 405 carries `Allow: GET, HEAD`). On `api.testnet.dreamdex.io` HEAD answers 200, so the defect is host-specific.
+
 ## Steps to reproduce
 
 ```bash

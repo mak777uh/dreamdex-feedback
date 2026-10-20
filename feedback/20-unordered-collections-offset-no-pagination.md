@@ -3,6 +3,8 @@
 Severity: normal
 Area: API
 
+Status: reproduces on **stg** and **mainnet** as of 2026-10-20 (2 distinct orders in 8 identical requests, `offset` still has no effect). On `api.testnet.dreamdex.io` the same 8 requests returned one order, so the instability is host-specific; `offset` is accepted and ignored on all three hosts.
+
 ## Steps to reproduce
 
 ```bash

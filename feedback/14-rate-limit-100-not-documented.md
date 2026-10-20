@@ -1,4 +1,4 @@
-# The 100-request rate limit is visible only in response headers, never in the docs
+# The request rate limit is visible only in response headers and differs by host (100 vs 200), never in the docs
 
 Severity: normal
 Area: docs

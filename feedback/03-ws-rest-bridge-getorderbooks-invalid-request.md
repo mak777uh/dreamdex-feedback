@@ -3,6 +3,8 @@
 Severity: major
 Area: API
 
+Status: reproduces on **stg** as of 2026-10-20 (`getOrderbooks` → `invalid_request`). On `api.testnet.dreamdex.io` the same WS request answers 200 with the books, so the failure is host-specific.
+
 ## Steps to reproduce
 
 Python (`websockets`) against the public feed:

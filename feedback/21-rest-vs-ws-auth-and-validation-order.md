@@ -3,6 +3,8 @@
 Severity: normal
 Area: API
 
+Status: reproduces on **stg** as of 2026-10-20 (REST `/portfolio` without a token → `400 missing_field`, WS `getPortfolio` → `401`). On `api.testnet.dreamdex.io` REST also answers 401 without a token, so the two transports agree there and the mismatch is host-specific.
+
 ## Steps to reproduce
 
 ```bash

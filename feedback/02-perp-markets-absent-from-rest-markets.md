@@ -1,4 +1,4 @@
-# Perp markets are not exposed by the documented market list: `kind` is undocumented and `kind=perp` is empty everywhere
+# Perp markets are missing from every documented REST host; the only host that serves them is undocumented
 
 Severity: major
 Area: API
@@ -23,7 +23,9 @@ enumerable through that endpoint.
 
 - `GET /v0/markets` (testnet) → **3 spot markets**, every item `"kind": "spot"`.
   Mainnet → **4 spot markets**, also `"kind": "spot"` only.
-- `GET /v0/markets?kind=perp` → **`200 {"markets":[]}` on both testnet and mainnet**.
+- `GET /v0/markets?kind=perp` → **`200 {"markets":[]}` on `stg.api.dreamdex.io` and on `api.dreamdex.io`**
+  (both hosts, re-checked 2026-10-20).
+- `GET /v0/markets?kind=perp` on `api.testnet.dreamdex.io` → **`200` with 24 perp markets** (ADA:USDso, AVAX:USDso, BNB:USDso, DOGE:USDso, …). That host is not named anywhere in the docs, which is filed separately as the undocumented-host item.
 - `GET /v0/markets?kind=all` → same spot-only set as the default call.
 - `GET /v0/markets?kind=perps` → **400**, and the error body publishes the parameter schema the docs omit:
 

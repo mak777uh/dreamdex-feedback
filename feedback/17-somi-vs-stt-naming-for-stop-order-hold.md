@@ -10,7 +10,11 @@ Area: docs
 > "TP and SL hold a little **STT** … Each pending TP or SL holds **0.15 STT** from your wallet."
 
 2. Bot kit for the same product (`somnia-chain/dreamdex-bot-kit`) uses the name **SOMI** for the same
-   constant (`somiPerStop`, text "0.15 SOMI").
+   constant: `packages/perp-core/src/stops.ts`, line 15 — *"Every pending stop locks SOMI (0.15 on the
+   live markets …)"*, and the helper is literally named `somiPerStop` (line 146).
+3. The same bot kit contradicts itself: its own `docs/perps.md`, line 73 — *"each one locks a small **STT**
+   deposit until it fires or is cancelled"*.
+
 
 ## Expected
 

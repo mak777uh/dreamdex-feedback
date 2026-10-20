@@ -53,6 +53,11 @@ grep -rn "reduceOnly" node_modules/@somnia-chain/markets-sdk/dist/*.d.ts
 
 ## Expected
 
+Caveat added during re-verification (2026-10-20): the SDK does expose `reduceOrder`, `reduceOrders` and
+`buildReduceOrders`, but those **shrink the quantity of an existing order in place** (documented in
+`orders.d.ts` as "keeps the id and shrinks the order in place"); none of them sets a reduce-only /
+close-only flag on a new order. The gap described here is the missing flag, not a missing function.
+
 Either support `reduceOnly` for plain limit/market orders, or state explicitly in the documentation that
 reduce-only is available only through TP/SL (i.e. through `placePerpStopOrder({ intent: "reduceOnly" })`).
 

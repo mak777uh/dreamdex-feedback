@@ -3,6 +3,8 @@
 Severity: major
 Area: docs
 
+Status: no longer reproduces as of 2026-10-20 (was observed 2026-10-19). The Perps (Testnet) page now documents Hideki, chain **50383**, the RPC `api.hideki2.infra.testnet.somnia.network`, the WS endpoint and the indexer, and states that testnet perps run on Hideki. **This item is kept for the record and is not part of the current submission.**
+
 ## Steps to reproduce
 
 1. Bounty page: "a developer program for dreamDEX perps on **Somnia Tokyo testnet**"; the MVP track
