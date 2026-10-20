@@ -10,6 +10,7 @@ curl -sS -i 'https://stg.api.dreamdex.io/v0/nope'
 curl -sS -i -X POST -H 'Content-Type: application/json' --data '{}' 'https://stg.api.dreamdex.io/v0/markets'
 curl -sS -i -X POST 'https://stg.api.dreamdex.io/v0/markets'   # no body at all
 curl -sS -i -X OPTIONS 'https://stg.api.dreamdex.io/v0/markets'   # no Origin header
+curl -sS -i 'https://stg.api.dreamdex.io/v0/markets/'            # trailing slash on a real route
 ```
 
 ## Expected
@@ -27,6 +28,9 @@ The Error Handling page states that all error responses share one JSON format (w
 - OPTIONS without an Origin header → **405** with content-type: text/plain; charset=utf-8,
   again without JSON or Error-Name. (A genuine CORS preflight, with Origin, correctly returns 204
   and the ccess-control-* headers.)
+- A trailing slash on a real route (`/v0/markets/`) → **404** with `content-type: text/plain; charset=utf-8`,
+  body `404 page not found` — the router is strict, the client gets no hint that the route exists one slash
+  to the left, and the error escapes the JSON envelope like the two cases above.
 
 Known routes do return the documented JSON (e.g. `GET /v0/markets/NOPE:USDso` → `market_not_found`), so
 the inconsistency is limited to routing-level errors — exactly the class a client's global error handler
@@ -44,6 +48,12 @@ content-type: text/plain; charset=utf-8
 HTTP/1.1 405 Method Not Allowed
 allow: GET, HEAD
 content-type: text/plain; charset=utf-8
+```
+```
+HTTP/1.1 404 Not Found
+content-type: text/plain; charset=utf-8
+
+404 page not found          <- GET /v0/markets/  (trailing slash)
 ```
 ```
 HTTP/1.0 411 Length Required

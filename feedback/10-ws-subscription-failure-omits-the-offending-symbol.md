@@ -32,11 +32,22 @@ subscribing to several markets can drop the bad one and keep the rest.
 The message names only the channel: "orderbook". With more than one symbol in the request there is no way
 to tell which symbol was rejected, and the connection stays open with no snapshot for any of them.
 
+**The two documentation pages also contradict each other about this frame.** Real-Time Feed documents
+`error:error` with `channel` as a **required** field (constraint `"error"`), alongside `type: "error"` and
+`message` — no `errorName` at all. The Errors page says the opposite, in bold: "The envelope is flat - there
+is **no** `channel` field on a subscription error", and shows
+`{"type": "error", "errorName": "unknown_channel", "message": "..."}`.
+
+The live frame follows the Errors page — it has `errorName`, and no `channel` — so a client generated from the
+Real-Time Feed schema drops the only field that identifies the failure.
+
 ## Evidence
 
-- Live frame captured 2026-10-20 01:35 MSK from `wss://stg.api.dreamdex.io/v0/ws/public`
+- Live frame captured 2026-10-20 01:35 MSK and re-captured 03:1x MSK from `wss://stg.api.dreamdex.io/v0/ws/public`
 - Contrast: on the same connection `{"id":1,"operation":"getMarkets"}` returns a normal 200 payload, so
   the socket and protocol are healthy
+- Docs cross-check: `https://app.dreamdex.io/docs/developers/websocket-api/real-time-feed` (`error:error`:
+  `channel` required) vs `https://app.dreamdex.io/docs/developers/websocket-api/errors` (flat, no `channel`)
 
 ## Environment
 

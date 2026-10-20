@@ -12,12 +12,17 @@ curl -sS -I 'https://stg.api.dreamdex.io/v0/orderbooks?symbols=SOMI:USDso'
 
 # control: same URLs with GET
 curl -sS -o /dev/null -w '%{http_code}\n' 'https://stg.api.dreamdex.io/v0/markets'
+
+# control: the server's own statement of which methods it implements
+curl -sS -X TRACE -D - -o /dev/null 'https://stg.api.dreamdex.io/v0/markets'
 ```
 
 ## Expected
 
 `HEAD` must return the same status and headers as `GET`, without a body (RFC 9110 §9.3.2). The server
-itself advertises HEAD as supported — its 405 response to a write method carries `allow: GET, HEAD`.
+itself advertises HEAD as supported — its 405 response to a write method carries `allow: GET, HEAD`, and
+`TRACE`, which no route of this API implements, is answered `405` with the very same `allow: GET, HEAD`.
+So the method list the server publishes includes HEAD; only the HEAD handler fails.
 
 ## Actual
 
@@ -42,6 +47,7 @@ is advertised — only the HEAD branch fails.
 | `HEAD /v0/orderbooks?symbols=SOMI:USDso` | **400** | `bad_request` |
 | `GET /v0/markets` | 200 | — |
 | `POST /v0/markets` (405) | 405 | body carries `allow: GET, HEAD` |
+| `TRACE /v0/markets` (405) | 405 | body carries `allow: GET, HEAD` — HEAD advertised as implemented |
 
 ## Environment
 

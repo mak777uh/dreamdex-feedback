@@ -8,6 +8,9 @@ Area: API
 ```bash
 curl -sS -i 'https://stg.api.dreamdex.io/v0/orderbooks?symbols=SOMI:USDso&symbols=SOMI:USDso'
 curl -sS -i 'https://stg.api.dreamdex.io/v0/tickers?symbols=SOMI:USDso&symbols=SOMI:USDso'
+
+# related: an empty value on the same parameter
+curl -sS -i 'https://stg.api.dreamdex.io/v0/orderbooks?symbols=&depth=1'
 ```
 
 ## Expected
@@ -29,13 +32,31 @@ error-name: invalid_param
 ```
 
 The error body is the only place where `uniqueItems: true` and `maxItems: 16` are revealed — neither is
-in the market-data documentation.
+in the market-data documentation. The same body also echoes the offending value:
+
+```
+Value:
+  [
+    "SOMI:USDso",
+    "SOMI:USDso"
+  ]
+```
+
+So one 400 response pastes the internal JSON schema **and** the request value into a human-readable
+`description`, while the error object has no structured field for either.
+
+**The same parameter has three different failure shapes.** Absent is silently accepted (the endpoint works
+without `symbols`), empty is `invalid_param` ("empty value is not allowed") rather than `missing_field`, and
+duplicated is `invalid_param` with the schema dump — three different contracts for one parameter, none of them
+documented.
 
 ## Evidence
 
 - `GET /v0/orderbooks?symbols=SOMI:USDso&symbols=SOMI:USDso` → 400 `duplicate items found`,
-  schema embedded in `description` shows `"maxItems": 16, "uniqueItems": true`
+  schema embedded in `description` shows `"maxItems": 16, "uniqueItems": true`, and the offending value is
+  echoed in a `Value:` block
 - Same for `/v0/tickers` with a duplicated symbol
+- `GET /v0/orderbooks?symbols=&depth=1` → 400 `invalid_param` "empty value is not allowed" (not `missing_field`)
 - Control: two *different* symbols in repeated keys → 200 with both books
 
 ## Environment
